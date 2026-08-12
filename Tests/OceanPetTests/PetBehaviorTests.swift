@@ -23,6 +23,23 @@ final class PetBehaviorTests: XCTestCase {
     }
 
     @MainActor
+    func testWalkPoseLoopsContinuouslyWithoutASettlePause() {
+        let start = PetScene.walkPose(progress: 0)
+        let end = PetScene.walkPose(progress: 1)
+        XCTAssertEqual(start.verticalOffset, end.verticalOffset, accuracy: 0.0001)
+        XCTAssertEqual(start.rotation, end.rotation, accuracy: 0.0001)
+        XCTAssertEqual(start.xScale, end.xScale, accuracy: 0.0001)
+        XCTAssertEqual(start.yScale, end.yScale, accuracy: 0.0001)
+
+        let firstStep = PetScene.walkPose(progress: 0.25)
+        let oppositeStep = PetScene.walkPose(progress: 0.75)
+        XCTAssertGreaterThan(firstStep.verticalOffset, 1)
+        XCTAssertEqual(firstStep.verticalOffset, oppositeStep.verticalOffset, accuracy: 0.0001)
+        XCTAssertEqual(firstStep.rotation, -oppositeStep.rotation, accuracy: 0.0001)
+        XCTAssertLessThan(abs(firstStep.rotation), 0.02)
+    }
+
+    @MainActor
     func testRoamingTargetStaysNearHomeAndInsideScreen() {
         let home = CGPoint(x: 500, y: 300)
         let target = PetWindowController.boundedRoamTarget(
@@ -87,6 +104,18 @@ final class PetBehaviorTests: XCTestCase {
         XCTAssertTrue(scene.children[0].children.isEmpty)
         XCTAssertTrue(scene.isOpaque(at: CGPoint(x: 105, y: 110)))
         XCTAssertFalse(scene.isOpaque(at: CGPoint(x: 34, y: 185)))
+        XCTAssertFalse(scene.isOpaque(at: CGPoint(x: 5, y: 225)))
+    }
+
+    @MainActor
+    func testSquidwardNarrowBodyRemainsClickable() throws {
+        let store = CharacterStore()
+        let squidward = try XCTUnwrap(store.characters.first { $0.id == "squidward-cartoon" })
+        let scene = PetScene(size: PetWindow.contentSize)
+        try scene.apply(character: squidward)
+
+        XCTAssertTrue(scene.isOpaque(at: CGPoint(x: 100, y: 120)))
+        XCTAssertTrue(scene.isOpaque(at: CGPoint(x: 100, y: 140)))
         XCTAssertFalse(scene.isOpaque(at: CGPoint(x: 5, y: 225)))
     }
 

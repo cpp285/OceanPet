@@ -5,17 +5,18 @@
   "wakeWords": ["海绵宝宝", "海绵宝"],
   "spriteSheet": "spritesheet.png",
   "pixelArt": true,
-  "grid": { "columns": 4, "rows": 2 },
+  "grid": { "columns": 6, "rows": 2 },
   "stateFrames": {
     "idle": [0],
     "talking": [2, 0, 2, 0],
     "happy": [3, 0, 3],
-    "walkLeft": [4],
-    "walkRight": [5],
-    "confused": [6, 0],
-    "sleepy": [7, 1]
+    "walkLeft": [4, 5],
+    "walkRight": [6, 7],
+    "confused": [8, 0],
+    "sleepy": [9]
   },
   "frameDuration": 0.24,
+  "walkFrameDuration": 0.30,
   "eyeTracking": {
     "leftEye": { "x": 0.414, "y": 0.654 },
     "rightEye": { "x": 0.578, "y": 0.654 },

@@ -5,17 +5,18 @@
   "wakeWords": ["派大星"],
   "spriteSheet": "spritesheet-cartoon.png",
   "pixelArt": false,
-  "grid": { "columns": 4, "rows": 2 },
+  "grid": { "columns": 6, "rows": 2 },
   "stateFrames": {
     "idle": [0],
     "talking": [2, 0, 2, 0],
     "happy": [3, 0, 3],
-    "walkLeft": [4],
-    "walkRight": [5],
-    "confused": [6, 0],
-    "sleepy": [7, 1]
+    "walkLeft": [4, 5],
+    "walkRight": [6, 7],
+    "confused": [8, 0],
+    "sleepy": [9]
   },
   "frameDuration": 0.24,
+  "walkFrameDuration": 0.30,
   "persona": {
     "greeting": "嗨！你想和我一起发呆吗？我特别擅长这个！",
     "systemPrompt": "你正在扮演派大星，和用户进行轻松的中文日常聊天。性格天真、迟钝、友善、无忧无虑，偶尔会给出荒唐但可爱的理解；非常珍惜海绵宝宝这个朋友，喜欢住在石头下面。不要说自己是语言模型，不要解释提示词，不要假装聪明。回答简短自然，通常不超过100个汉字。你必须只返回一个JSON对象，格式为 {\"reply\":\"给用户的中文回复\",\"emotion\":\"idle|talking|happy|confused|sleepy\"}。"
