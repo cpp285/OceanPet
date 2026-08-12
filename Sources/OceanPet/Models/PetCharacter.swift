@@ -35,6 +35,7 @@ public struct PetManifest: Codable, Equatable, Identifiable {
     public let grid: PetGrid
     public let stateFrames: [String: [Int]]
     public let frameDuration: Double
+    public let walkFrameDuration: Double?
     public let persona: PetPersona
     public let eyeTracking: EyeTrackingConfig?
 

@@ -13,14 +13,19 @@ public final class PetSpriteView: SKView {
     private var startingWindowOrigin: NSPoint?
     private var dragged = false
     private var pendingSingleClick: DispatchWorkItem?
+    private var pointerProtectionUntil: TimeInterval = 0
 
     public private(set) var isPointerDown = false
+    public var shouldKeepReceivingMouseEvents: Bool {
+        isPointerDown || ProcessInfo.processInfo.systemUptime < pointerProtectionUntil
+    }
 
     public override var acceptsFirstResponder: Bool { true }
     public override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
 
     public override func mouseDown(with event: NSEvent) {
         isPointerDown = true
+        protectPointerEventsForDoubleClick()
         downPoint = NSEvent.mouseLocation
         startingWindowOrigin = window?.frame.origin
         dragged = false
@@ -42,6 +47,7 @@ public final class PetSpriteView: SKView {
     public override func mouseUp(with event: NSEvent) {
         defer {
             isPointerDown = false
+            protectPointerEventsForDoubleClick()
             downPoint = nil
             startingWindowOrigin = nil
         }
@@ -62,11 +68,20 @@ public final class PetSpriteView: SKView {
             self?.pendingSingleClick = nil
         }
         pendingSingleClick = work
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.22, execute: work)
+        DispatchQueue.main.asyncAfter(
+            deadline: .now() + NSEvent.doubleClickInterval,
+            execute: work
+        )
     }
 
     public override func rightMouseDown(with event: NSEvent) {
+        protectPointerEventsForDoubleClick()
         guard let menu = menuProvider?() else { return }
         menu.popUp(positioning: nil, at: convert(event.locationInWindow, from: nil), in: self)
+    }
+
+    private func protectPointerEventsForDoubleClick() {
+        pointerProtectionUntil = ProcessInfo.processInfo.systemUptime
+            + max(NSEvent.doubleClickInterval, 0.25)
     }
 }

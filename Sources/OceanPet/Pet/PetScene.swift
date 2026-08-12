@@ -1,6 +1,13 @@
 import AppKit
 import SpriteKit
 
+struct PetWalkPose {
+    let verticalOffset: CGFloat
+    let rotation: CGFloat
+    let xScale: CGFloat
+    let yScale: CGFloat
+}
+
 @MainActor
 public final class PetScene: SKScene {
     private enum GazeDirection: Int, Hashable {
@@ -39,13 +46,14 @@ public final class PetScene: SKScene {
     private var currentGaze: GazeDirection = .center
     private var lastGazeCheck: TimeInterval = 0
     private var lastGazeChange: TimeInterval = 0
+    private let spriteBottomPadding: CGFloat = 10
 
     public override init(size: CGSize) {
         super.init(size: size)
         scaleMode = .resizeFill
         backgroundColor = .clear
         sprite.anchorPoint = CGPoint(x: 0.5, y: 0.08)
-        sprite.position = CGPoint(x: size.width / 2, y: 8)
+        sprite.position = CGPoint(x: size.width / 2, y: spriteBottomPadding)
         addChild(sprite)
     }
 
@@ -103,23 +111,23 @@ public final class PetScene: SKScene {
             exhale.timingMode = .easeInEaseOut
             sprite.run(.repeatForever(.sequence([inhale, exhale])), withKey: "breathing")
         case .walkLeft, .walkRight:
-            let firstStep = SKAction.group([
-                .moveBy(x: 0, y: 3, duration: 0.14),
-                .rotate(toAngle: -0.022, duration: 0.14),
-                .scaleX(to: 1.015, duration: 0.14)
-            ])
-            firstStep.timingMode = .easeOut
-            let secondStep = SKAction.group([
-                .moveBy(x: 0, y: -3, duration: 0.14),
-                .rotate(toAngle: 0.022, duration: 0.14),
-                .scaleX(to: 0.985, duration: 0.14)
-            ])
-            secondStep.timingMode = .easeInEaseOut
-            let settle = SKAction.group([
-                .rotate(toAngle: 0, duration: 0.08),
-                .scaleX(to: 1, duration: 0.08)
-            ])
-            sprite.run(.repeatForever(.sequence([firstStep, secondStep, settle])), withKey: "walk-motion")
+            let cycleDuration: TimeInterval = 0.60
+            let direction: CGFloat = state == .walkLeft ? -1 : 1
+            let restingPosition = sprite.position
+            let walkCycle = SKAction.customAction(withDuration: cycleDuration) { node, elapsedTime in
+                let pose = Self.walkPose(
+                    progress: elapsedTime / CGFloat(cycleDuration),
+                    direction: direction
+                )
+                node.position = CGPoint(
+                    x: restingPosition.x,
+                    y: restingPosition.y + pose.verticalOffset
+                )
+                node.zRotation = pose.rotation
+                node.xScale = pose.xScale
+                node.yScale = pose.yScale
+            }
+            sprite.run(.repeatForever(walkCycle), withKey: "walk-motion")
         case .happy:
             let up = SKAction.moveBy(x: 0, y: 9, duration: 0.14)
             up.timingMode = .easeOut
@@ -182,6 +190,18 @@ public final class PetScene: SKScene {
         )
     }
 
+    static func walkPose(progress: CGFloat, direction: CGFloat = 1) -> PetWalkPose {
+        let normalizedProgress = progress - floor(progress)
+        let phase = normalizedProgress * 2 * .pi
+        let stepPulse = pow(sin(phase), 2)
+        return PetWalkPose(
+            verticalOffset: stepPulse * 1.4,
+            rotation: sin(phase) * 0.010 * direction,
+            xScale: 1 + stepPulse * 0.004,
+            yScale: 1 - stepPulse * 0.003
+        )
+    }
+
     private static func gazeDirection(delta: CGVector) -> GazeDirection {
         let distance = hypot(delta.dx, delta.dy)
         guard distance >= 48 else { return .center }
@@ -214,7 +234,25 @@ public final class PetScene: SKScene {
         let pixelX = min(column * cellWidth + Int(u * CGFloat(cellWidth)), bitmap.pixelsWide - 1)
         let bottomRowOrigin = bitmap.pixelsHigh - (topRow + 1) * cellHeight
         let pixelY = min(bottomRowOrigin + Int(v * CGFloat(cellHeight)), bitmap.pixelsHigh - 1)
-        return (bitmap.colorAt(x: pixelX, y: pixelY)?.alphaComponent ?? 0) > 0.12
+        let hitPadding: CGFloat = 4
+        let radiusX = max(Int(ceil(hitPadding / sprite.size.width * CGFloat(cellWidth))), 1)
+        let radiusY = max(Int(ceil(hitPadding / sprite.size.height * CGFloat(cellHeight))), 1)
+        let frameMinX = column * cellWidth
+        let frameMaxX = frameMinX + cellWidth - 1
+        let frameMinY = bottomRowOrigin
+        let frameMaxY = frameMinY + cellHeight - 1
+
+        for y in max(pixelY - radiusY, frameMinY)...min(pixelY + radiusY, frameMaxY) {
+            for x in max(pixelX - radiusX, frameMinX)...min(pixelX + radiusX, frameMaxX) {
+                let dx = CGFloat(x - pixelX) / CGFloat(radiusX)
+                let dy = CGFloat(y - pixelY) / CGFloat(radiusY)
+                guard dx * dx + dy * dy <= 1 else { continue }
+                if (bitmap.colorAt(x: x, y: y)?.alphaComponent ?? 0) > 0.12 {
+                    return true
+                }
+            }
+        }
+        return false
     }
 
     private func configureEyeTracking(_ config: EyeTrackingConfig?) {
@@ -243,9 +281,16 @@ public final class PetScene: SKScene {
         currentFrameIndex = frameIndices.first ?? 0
         sprite.texture = textures[0]
         if textures.count > 1 {
+            let frameDuration: TimeInterval
+            if visualState == .walkLeft || visualState == .walkRight {
+                frameDuration = character.manifest.walkFrameDuration
+                    ?? character.manifest.frameDuration
+            } else {
+                frameDuration = character.manifest.frameDuration
+            }
             let animation = SKAction.animate(
                 with: textures,
-                timePerFrame: max(character.manifest.frameDuration, 0.08),
+                timePerFrame: max(frameDuration, 0.08),
                 resize: false,
                 restore: false
             )
@@ -370,7 +415,12 @@ public final class PetScene: SKScene {
     }
 
     private func resetSpritePose() {
-        sprite.position = CGPoint(x: size.width / 2, y: 8)
+        // Keep the complete texture rectangle inside the transparent window.
+        // The extra padding also protects feet during walk/rotation animations.
+        sprite.position = CGPoint(
+            x: size.width / 2,
+            y: sprite.anchorPoint.y * sprite.size.height + spriteBottomPadding
+        )
         sprite.zRotation = 0
         sprite.xScale = 1
         sprite.yScale = 1

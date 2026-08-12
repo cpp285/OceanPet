@@ -144,12 +144,12 @@ public final class PetWindowController: NSObject, NSWindowDelegate {
             return (target, .zero, true)
         }
 
-        let dt = CGFloat(min(max(deltaTime, 0), 1.0 / 20.0))
+        let dt = CGFloat(min(max(deltaTime, 0), 1.0 / 30.0))
         guard dt > 0 else { return (origin, velocity, false) }
 
-        let maximumSpeed: CGFloat = 78
-        let acceleration: CGFloat = 165
-        let braking: CGFloat = 210
+        let maximumSpeed: CGFloat = 105
+        let acceleration: CGFloat = 380
+        let braking: CGFloat = 460
         let desiredSpeed = min(maximumSpeed, sqrt(2 * braking * max(distance - 0.5, 0)))
         let desiredVelocity = CGVector(
             dx: offset.dx / distance * desiredSpeed,
@@ -289,7 +289,15 @@ public final class PetWindowController: NSObject, NSWindowDelegate {
         isReturningHome = returningHome
         roamTarget = target
         roamPosition = current
-        roamVelocity = .zero
+        let offset = CGVector(dx: target.x - current.x, dy: target.y - current.y)
+        let distance = hypot(offset.dx, offset.dy)
+        let startingSpeed: CGFloat = min(48, distance * 0.8)
+        roamVelocity = distance > 0
+            ? CGVector(
+                dx: offset.dx / distance * startingSpeed,
+                dy: offset.dy / distance * startingSpeed
+            )
+            : .zero
         lastRoamUpdateTime = nil
         scene.setState(target.x < current.x ? .walkLeft : .walkRight)
     }
@@ -300,7 +308,7 @@ public final class PetWindowController: NSObject, NSWindowDelegate {
     }
 
     private func updateMousePassThrough() {
-        if spriteView.isPointerDown {
+        if spriteView.shouldKeepReceivingMouseEvents {
             window.ignoresMouseEvents = false
             return
         }
@@ -346,7 +354,7 @@ public final class PetWindowController: NSObject, NSWindowDelegate {
                 completeActivityStep()
             } else {
                 scene.setState(.idle)
-                scheduleActivityTimer(after: 0.35) { [weak self] in
+                scheduleActivityTimer(after: 0.16) { [weak self] in
                     self?.startMovement(to: self?.homeOrigin ?? step.origin, returningHome: true)
                 }
             }

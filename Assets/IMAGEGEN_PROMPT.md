@@ -58,3 +58,26 @@ Style/medium: clean professional traditional 2D television cel animation; smooth
 Composition/framing: landscape 3:2 canvas; exact equal 4x2 grid; one full-body Patrick centered in each cell; identical character height and footprint in comparable standing poses; feet aligned to a consistent baseline; generous padding; nothing crosses cell boundaries.
 Constraints: preserve recognizable pink pointed starfish body, round belly, friendly round eyes, simple eyebrows, large expressive mouth, lime-green shorts with purple flowers. Exactly one Patrick per cell. Every hand and foot complete. Walking frames clearly face opposite directions. No SpongeBob, no other characters, no props, no extra objects, no text, no labels, no symbols, no motion lines, no watermark, no cast/contact shadows. Background must be only solid #00FFFF.
 ```
+
+## Squidward classic 2D cartoon sprite sheet
+
+Generated from the approved friendly Squidward character candidate, with the
+black clarinet retained in every state. The talking pose received a final
+localized eye correction so each eye has one aligned pupil.
+
+```text
+Use case: style-transfer
+Asset type: production macOS floating-companion animation sprite sheet, exact 4 columns by 2 rows
+Input image: Image 1 is the approved friendly Squidward character design and is the visual identity reference for every frame.
+Primary request: Create one exact 4-by-2 sprite sheet with eight full-body Squidward poses, ordered left-to-right then top-to-bottom: 1 relaxed idle holding his clarinet, 2 gentle blink, 3 talking with one open-hand conversational gesture, 4 happily playing the clarinet, 5 walking left, 6 walking right, 7 mildly confused while scratching his head, 8 sleepy while leaning on his clarinet. Keep the same pale blue-green skin, large rounded head, long drooping nose, relaxed friendly eyes, small restrained smile, brown short-sleeved polo shirt, and black clarinet with silver keys in all eight cells.
+Scene/backdrop: perfectly flat solid #FF00FF chroma-key background across the complete canvas and gutters. No shadows, gradients, texture, scenery, floor plane, reflections, or lighting variation. Do not use #FF00FF in the character.
+Style/medium: polished classic hand-drawn 2D television cel animation; smooth confident dark outlines; clean flat colors; subtle controlled cel shading; antialiased curves; gentle and approachable expression rather than angry or intimidating; no pixel art, no 3D, no photorealism.
+Composition/framing: exact equal 4x2 grid; one complete character in each cell; consistent head, body, clothing, instrument, palette, line weight, and scale; full body and clarinet visible with generous transparent-ready padding; standing feet aligned; nothing crosses a cell boundary.
+Constraints: clarinet must remain recognizable as black with silver keys; exactly one Squidward per cell; no SpongeBob, Patrick, or other characters; no text, labels, symbols, extra props, watermark, motion lines, cast shadows, or contact shadows.
+```
+
+### Squidward talking-eye correction
+
+```text
+Use case: precise localized character-art correction. Preserve the full-body talking pose, magenta background, body, head, mouth, shirt, hand, clarinet, legs, feet, outlines, colors, scale, and placement. Correct only the eye-and-eyelid area. Use two clean adjacent yellow eye openings under matching relaxed half-lowered eyelids. Give the eyes exactly one identical red-brown pupil each, aligned on one horizontal line and looking in the same direction. The long nose may overlap the inner eye edges naturally but must not create a duplicate pupil, sliced eye, crossed gaze, or pupil merged into the nose. Keep the expression mild, weary, friendly, and conversational.
+```
