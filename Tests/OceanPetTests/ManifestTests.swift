@@ -22,6 +22,7 @@ final class ManifestTests: XCTestCase {
         let patrick = store.characters.first { $0.id == "patrick-pixel" }
         let squidward = store.characters.first { $0.id == "squidward-cartoon" }
         XCTAssertEqual(spongeBob?.manifest.conversationName, "海绵宝宝")
+        XCTAssertEqual(spongeBob?.manifest.displayName, "卡通海绵宝宝")
         XCTAssertEqual(spongeBob?.manifest.effectiveWakeWords, ["海绵宝宝", "海绵宝"])
         XCTAssertEqual(patrick?.manifest.conversationName, "派大星")
         XCTAssertEqual(patrick?.manifest.effectiveWakeWords, ["派大星"])
@@ -35,7 +36,7 @@ final class ManifestTests: XCTestCase {
                 && $0.manifest.frames(for: .walkRight) == [6, 7]
                 && $0.manifest.walkFrameDuration == 0.30
         })
-        XCTAssertEqual(spongeBob?.manifest.usesPixelArtFiltering, true)
+        XCTAssertEqual(spongeBob?.manifest.usesPixelArtFiltering, false)
         XCTAssertEqual(patrick?.manifest.usesPixelArtFiltering, false)
         XCTAssertEqual(squidward?.manifest.usesPixelArtFiltering, false)
 

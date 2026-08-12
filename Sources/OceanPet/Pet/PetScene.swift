@@ -349,7 +349,8 @@ public final class PetScene: SKScene {
             in: cellSize,
             center: config.leftEye,
             direction: direction,
-            config: config
+            config: config,
+            interpolation: pixelArt ? .none : .high
         )
         moveOriginalPupil(
             source: source,
@@ -357,7 +358,8 @@ public final class PetScene: SKScene {
             in: cellSize,
             center: config.rightEye,
             direction: direction,
-            config: config
+            config: config,
+            interpolation: pixelArt ? .none : .high
         )
         composed.unlockFocus()
 
@@ -373,7 +375,8 @@ public final class PetScene: SKScene {
         in cellSize: CGSize,
         center: PetPoint,
         direction: GazeDirection,
-        config: EyeTrackingConfig
+        config: EyeTrackingConfig,
+        interpolation: NSImageInterpolation
     ) {
         let eyeCenter = CGPoint(x: center.x * cellSize.width, y: center.y * cellSize.height)
         let clearSize = CGSize(
@@ -401,7 +404,7 @@ public final class PetScene: SKScene {
             operation: .copy,
             fraction: 1,
             respectFlipped: false,
-            hints: [.interpolation: NSImageInterpolation.none.rawValue]
+            hints: [.interpolation: interpolation.rawValue]
         )
     }
 
