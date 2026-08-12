@@ -1,10 +1,10 @@
 {
   "id": "spongebob-pixel",
-  "displayName": "像素海绵宝宝",
+  "displayName": "卡通海绵宝宝",
   "spokenName": "海绵宝宝",
   "wakeWords": ["海绵宝宝", "海绵宝"],
   "spriteSheet": "spritesheet.png",
-  "pixelArt": true,
+  "pixelArt": false,
   "grid": { "columns": 6, "rows": 2 },
   "stateFrames": {
     "idle": [0],
@@ -18,8 +18,8 @@
   "frameDuration": 0.24,
   "walkFrameDuration": 0.30,
   "eyeTracking": {
-    "leftEye": { "x": 0.414, "y": 0.654 },
-    "rightEye": { "x": 0.578, "y": 0.654 },
+    "leftEye": { "x": 0.422, "y": 0.646 },
+    "rightEye": { "x": 0.589, "y": 0.646 },
     "maskSize": { "x": 0.105, "y": 0.085 },
     "pupilSize": { "x": 0.080, "y": 0.064 },
     "maxOffset": { "x": 0.018, "y": 0.011 },

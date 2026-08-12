@@ -1,4 +1,4 @@
-# OceanPet pixel sprite prompts
+# OceanPet character sprite prompts
 
 Generated with the built-in image generation tool, then converted from a flat
 chroma-key background to an alpha PNG with the imagegen skill helper.
@@ -13,6 +13,35 @@ Scene/backdrop: perfectly flat solid #ff00ff chroma-key background for backgroun
 Style/medium: crisp hand-authored 16-bit pixel art, chunky pixels, limited palette, readable at 128 px, no antialiasing, no blur.
 Composition/framing: each pose centered in its own equal cell, feet aligned to the same baseline, full body visible with generous padding, nothing crosses cell boundaries.
 Constraints: recognizable yellow rectangular sponge character with large blue eyes, buck teeth, white shirt, red tie, brown square shorts, striped socks, black shoes; exactly one character per cell; no props; no extra objects; no text; no labels; no watermark. Background must be one uniform #ff00ff with no shadows, gradients, texture, reflections, floor plane, or lighting variation. Do not use #ff00ff anywhere in the character. No cast shadow, no contact shadow, no reflection.
+```
+
+## SpongeBob classic 2D cartoon replacement
+
+Generated with the built-in image generation tool using the previous sprite sheet
+as the pose/layout reference, then converted from magenta chroma key to alpha.
+
+```text
+Use case: style-transfer
+Asset type: desktop-pet sprite sheet
+Input image: Image 1 is the edit target and defines the character, clothing, eight poses, proportions, and exact 4-by-2 layout.
+Primary request: Redraw only the character rendering from pixel art into a polished, smooth, high-resolution 2D cartoon. Keep the same character design and the same eight poses in exactly the same order.
+Style/medium: clean hand-drawn cel animation, smooth antialiased dark outlines, flat saturated colors, restrained cel shading, no pixel blocks.
+Composition: exactly four equal columns and two equal rows. Top row: idle smile, blink, talking, joyful. Bottom row: walk left, walk right, confused, sleepy. Exactly one complete full-body character centered inside each cell, consistent scale and baseline, generous padding, no part crossing a cell boundary.
+Invariants: yellow rectangular porous sponge body; large round blue eyes; eyelashes; long nose; two buck teeth; white shirt; red tie; brown shorts; striped socks; black shoes. Keep all limbs connected and fully visible. Keep the front-facing eye locations consistent.
+Background: perfectly flat uniform solid #FF00FF chroma-key background, with no gradient, texture, shadow, reflection, floor, border, or grid. Do not use #FF00FF in the character.
+Constraints: no text, no watermark, no extra characters or props, no pixel art, no jagged edges, no 3D, no cropped feet, no detached or duplicated limbs, no distorted eyes, no magenta halo.
+```
+
+### SpongeBob opposite walk phase
+
+```text
+Use case: precise-object-edit
+Asset type: two-frame desktop-pet walking animation refinement
+Input image: Image 1 is the edit target. It contains exactly two equal side-by-side cells: left-facing walk in the left cell and right-facing walk in the right cell.
+Primary request: create the opposite gait phase in both cells. Change only the walking limb positions: swap which leg is reaching forward and which leg is trailing, and swing the arms naturally in the opposite phase. The character in the left cell must still face and travel left; the character in the right cell must still face and travel right.
+Invariants: preserve the exact same smooth 2D cartoon character identity, face, body, eye direction, yellow sponge shape, pores, outfit, proportions, palette, line weight, scale, cell placement, and #FF00FF background. Keep each body as one connected full-body drawing. Keep both complete shoes, legs, arms, and hands visible.
+Composition: exactly two equal cells in one row, one complete centered character per cell, identical baseline and padding to Image 1, nothing crossing the midpoint or outer edge.
+Constraints: background remains perfectly flat uniform solid #FF00FF; no gradients, shadows, floor, grid line, text, watermark, extra character, extra limb, detached body part, crop, pixel art, 3D, or magenta halo.
 ```
 
 ## Patrick Star
