@@ -21,6 +21,19 @@ OceanPet 是一款原生 macOS 桌面宠物。它以透明悬浮窗口常驻桌�
 项目使用 Swift、AppKit、SpriteKit 和 SwiftUI 编写，不是网页应用，也不需要启动
 本地服务器。聊天记录、角色包、API 配置和本地笔记索引均保存在用户自己的 Mac 上。
 
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="docs/images/spongebob.png" width="260" alt="OceanPet 像素海绵宝宝" /><br />
+      <strong>像素海绵宝宝</strong>
+    </td>
+    <td align="center">
+      <img src="docs/images/patrick.png" width="260" alt="OceanPet 卡通派大星" /><br />
+      <strong>卡通派大星</strong>
+    </td>
+  </tr>
+</table>
+
 > 本项目适合个人学习、桌面交互实验和非商业用途。仓库中的角色形象有独立的权利说明，
 > 不包含在项目的 MIT 代码许可证中。
 
