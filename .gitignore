@@ -1,0 +1,15 @@
+.build/
+.swiftpm/
+dist/
+tmp/
+.DS_Store
+config.json
+.env
+.env.*
+DerivedData/
+xcuserdata/
+*.xcuserstate
+.idea/
+.vscode/
+*.pem
+*.p12
