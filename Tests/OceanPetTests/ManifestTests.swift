@@ -21,6 +21,7 @@ final class ManifestTests: XCTestCase {
         XCTAssertEqual(spongeBob?.manifest.effectiveWakeWords, ["海绵宝宝", "海绵宝"])
         XCTAssertEqual(patrick?.manifest.conversationName, "派大星")
         XCTAssertEqual(patrick?.manifest.effectiveWakeWords, ["派大星"])
+        XCTAssertEqual(patrick?.manifest.frames(for: .idle), [0])
         XCTAssertEqual(spongeBob?.manifest.usesPixelArtFiltering, true)
         XCTAssertEqual(patrick?.manifest.usesPixelArtFiltering, false)
     }

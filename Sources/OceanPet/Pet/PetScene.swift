@@ -84,16 +84,21 @@ public final class PetScene: SKScene {
 
         switch state {
         case .idle:
+            let isPixelArt = character?.manifest.usesPixelArtFiltering ?? true
+            let horizontalScale: CGFloat = isPixelArt ? 1.008 : 1.0
+            let verticalScale: CGFloat = isPixelArt ? 1.012 : 1.004
+            let verticalMovement: CGFloat = isPixelArt ? 1.0 : 0.5
+            let duration: TimeInterval = isPixelArt ? 1.05 : 1.6
             let inhale = SKAction.group([
-                .scaleX(to: 1.008, duration: 1.05),
-                .scaleY(to: 1.012, duration: 1.05),
-                .moveBy(x: 0, y: 1, duration: 1.05)
+                .scaleX(to: horizontalScale, duration: duration),
+                .scaleY(to: verticalScale, duration: duration),
+                .moveBy(x: 0, y: verticalMovement, duration: duration)
             ])
             inhale.timingMode = .easeInEaseOut
             let exhale = SKAction.group([
-                .scaleX(to: 1, duration: 1.05),
-                .scaleY(to: 1, duration: 1.05),
-                .moveBy(x: 0, y: -1, duration: 1.05)
+                .scaleX(to: 1, duration: duration),
+                .scaleY(to: 1, duration: duration),
+                .moveBy(x: 0, y: -verticalMovement, duration: duration)
             ])
             exhale.timingMode = .easeInEaseOut
             sprite.run(.repeatForever(.sequence([inhale, exhale])), withKey: "breathing")

@@ -1,13 +1,13 @@
 {
   "id": "patrick-pixel",
-  "displayName": "像素派大星",
+  "displayName": "卡通派大星",
   "spokenName": "派大星",
   "wakeWords": ["派大星"],
   "spriteSheet": "spritesheet-cartoon.png",
   "pixelArt": false,
   "grid": { "columns": 4, "rows": 2 },
   "stateFrames": {
-    "idle": [0, 0, 0, 0, 0, 0, 1],
+    "idle": [0],
     "talking": [2, 0, 2, 0],
     "happy": [3, 0, 3],
     "walkLeft": [4],
