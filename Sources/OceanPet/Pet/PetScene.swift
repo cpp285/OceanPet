@@ -38,7 +38,6 @@ public final class PetScene: SKScene {
     private var sheetTexture: SKTexture?
     private var sheetImage: NSImage?
     private var sheetBitmap: NSBitmapImageRep?
-    private var currentFrameIndex = 0
     private var visualState: PetVisualState = .idle
     private var eyeTrackingConfig: EyeTrackingConfig?
     private var eyeVisibleStates: Set<String> = []
@@ -225,30 +224,47 @@ public final class PetScene: SKScene {
         let v = (local.y + sprite.anchorPoint.y * sprite.size.height) / sprite.size.height
         guard u >= 0, u < 1, v >= 0, v < 1 else { return false }
 
+        // Slender characters can have large visual gaps between limbs and props.
+        // Their optional core area makes the body dependable for menus and dragging.
+        if let area = character.manifest.hitArea,
+           u >= area.x, u <= area.x + area.width,
+           v >= area.y, v <= area.y + area.height {
+            return true
+        }
+
         let columns = character.manifest.grid.columns
         let rows = character.manifest.grid.rows
         let cellWidth = bitmap.pixelsWide / columns
         let cellHeight = bitmap.pixelsHigh / rows
-        let column = currentFrameIndex % columns
-        let topRow = currentFrameIndex / columns
-        let pixelX = min(column * cellWidth + Int(u * CGFloat(cellWidth)), bitmap.pixelsWide - 1)
-        let bottomRowOrigin = bitmap.pixelsHigh - (topRow + 1) * cellHeight
-        let pixelY = min(bottomRowOrigin + Int(v * CGFloat(cellHeight)), bitmap.pixelsHigh - 1)
-        let hitPadding: CGFloat = 4
+        let hitPadding = character.manifest.effectiveHitPadding
         let radiusX = max(Int(ceil(hitPadding / sprite.size.width * CGFloat(cellWidth))), 1)
         let radiusY = max(Int(ceil(hitPadding / sprite.size.height * CGFloat(cellHeight))), 1)
-        let frameMinX = column * cellWidth
-        let frameMaxX = frameMinX + cellWidth - 1
-        let frameMinY = bottomRowOrigin
-        let frameMaxY = frameMinY + cellHeight - 1
 
-        for y in max(pixelY - radiusY, frameMinY)...min(pixelY + radiusY, frameMaxY) {
-            for x in max(pixelX - radiusX, frameMinX)...min(pixelX + radiusX, frameMaxX) {
-                let dx = CGFloat(x - pixelX) / CGFloat(radiusX)
-                let dy = CGFloat(y - pixelY) / CGFloat(radiusY)
-                guard dx * dx + dy * dy <= 1 else { continue }
-                if (bitmap.colorAt(x: x, y: y)?.alphaComponent ?? 0) > 0.12 {
-                    return true
+        // SpriteKit advances animated textures independently. Test the union of the
+        // current state's frames so the visible pose and its clickable area never drift apart.
+        let frameCount = columns * rows
+        let frameIndices = Set(character.manifest.frames(for: visualState)).filter {
+            $0 >= 0 && $0 < frameCount
+        }
+        for frameIndex in frameIndices {
+            let column = frameIndex % columns
+            let topRow = frameIndex / columns
+            let pixelX = min(column * cellWidth + Int(u * CGFloat(cellWidth)), bitmap.pixelsWide - 1)
+            let bottomRowOrigin = bitmap.pixelsHigh - (topRow + 1) * cellHeight
+            let pixelY = min(bottomRowOrigin + Int(v * CGFloat(cellHeight)), bitmap.pixelsHigh - 1)
+            let frameMinX = column * cellWidth
+            let frameMaxX = frameMinX + cellWidth - 1
+            let frameMinY = bottomRowOrigin
+            let frameMaxY = frameMinY + cellHeight - 1
+
+            for y in max(pixelY - radiusY, frameMinY)...min(pixelY + radiusY, frameMaxY) {
+                for x in max(pixelX - radiusX, frameMinX)...min(pixelX + radiusX, frameMaxX) {
+                    let dx = CGFloat(x - pixelX) / CGFloat(radiusX)
+                    let dy = CGFloat(y - pixelY) / CGFloat(radiusY)
+                    guard dx * dx + dy * dy <= 1 else { continue }
+                    if (bitmap.colorAt(x: x, y: y)?.alphaComponent ?? 0) > 0.12 {
+                        return true
+                    }
                 }
             }
         }
@@ -278,7 +294,6 @@ public final class PetScene: SKScene {
         guard !textures.isEmpty else { return }
 
         sprite.removeAction(forKey: "frames")
-        currentFrameIndex = frameIndices.first ?? 0
         sprite.texture = textures[0]
         if textures.count > 1 {
             let frameDuration: TimeInterval

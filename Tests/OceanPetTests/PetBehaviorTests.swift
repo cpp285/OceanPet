@@ -116,6 +116,8 @@ final class PetBehaviorTests: XCTestCase {
 
         XCTAssertTrue(scene.isOpaque(at: CGPoint(x: 100, y: 120)))
         XCTAssertTrue(scene.isOpaque(at: CGPoint(x: 100, y: 140)))
+        XCTAssertTrue(scene.isOpaque(at: CGPoint(x: 120, y: 62)))
+        XCTAssertTrue(scene.isOpaque(at: CGPoint(x: 145, y: 120)))
         XCTAssertFalse(scene.isOpaque(at: CGPoint(x: 5, y: 225)))
     }
 
