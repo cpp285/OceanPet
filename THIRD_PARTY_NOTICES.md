@@ -2,10 +2,10 @@
 
 The source code in this repository is licensed under the MIT License.
 
-The included SpongeBob SquarePants, Patrick Star, and Squidward Tentacles
+The included SpongeBob SquarePants, Patrick Star, Squidward Tentacles, and Mr. Krabs
 character artwork is provided only for personal, non-commercial
-experimentation. SpongeBob SquarePants, Patrick Star, Squidward Tentacles, and
-related characters, names, and marks belong to their respective rights holders.
+experimentation. SpongeBob SquarePants, Patrick Star, Squidward Tentacles, Mr. Krabs,
+and related characters, names, and marks belong to their respective rights holders.
 The character artwork is not covered by the OceanPet MIT License.
 
 Anyone redistributing or publishing a fork should review the applicable rights

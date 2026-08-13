@@ -38,6 +38,15 @@ OceanPet 是一款原生 macOS 桌面宠物。它以透明悬浮窗口常驻桌�
   </tr>
 </table>
 
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="docs/images/mr-krabs.png" width="260" alt="OceanPet 卡通蟹老板" /><br />
+      <strong>卡通蟹老板</strong>
+    </td>
+  </tr>
+</table>
+
 > 本项目适合个人学习、桌面交互实验和非商业用途。仓库中的角色形象有独立的权利说明，
 > 不包含在项目的 MIT 代码许可证中。
 

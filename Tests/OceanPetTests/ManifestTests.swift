@@ -15,12 +15,13 @@ final class ManifestTests: XCTestCase {
         XCTAssertNotNil(store.active.flatMap { NSImage(contentsOf: $0.spriteSheetURL) })
         XCTAssertEqual(
             Set(store.characters.map(\.id)),
-            Set(["spongebob-pixel", "patrick-pixel", "squidward-cartoon"])
+            Set(["spongebob-pixel", "patrick-pixel", "squidward-cartoon", "mr-krabs-cartoon"])
         )
         XCTAssertTrue(store.characters.allSatisfy { NSImage(contentsOf: $0.spriteSheetURL) != nil })
         let spongeBob = store.characters.first { $0.id == "spongebob-pixel" }
         let patrick = store.characters.first { $0.id == "patrick-pixel" }
         let squidward = store.characters.first { $0.id == "squidward-cartoon" }
+        let mrKrabs = store.characters.first { $0.id == "mr-krabs-cartoon" }
         XCTAssertEqual(spongeBob?.manifest.conversationName, "海绵宝宝")
         XCTAssertEqual(spongeBob?.manifest.displayName, "卡通海绵宝宝")
         XCTAssertEqual(spongeBob?.manifest.effectiveWakeWords, ["海绵宝宝", "海绵宝"])
@@ -30,6 +31,9 @@ final class ManifestTests: XCTestCase {
         XCTAssertEqual(squidward?.manifest.conversationName, "章鱼哥")
         XCTAssertEqual(squidward?.manifest.effectiveWakeWords, ["章鱼哥"])
         XCTAssertEqual(squidward?.manifest.frames(for: .idle), [0])
+        XCTAssertEqual(mrKrabs?.manifest.conversationName, "蟹老板")
+        XCTAssertEqual(mrKrabs?.manifest.effectiveWakeWords, ["蟹老板", "尤金"])
+        XCTAssertEqual(mrKrabs?.manifest.frames(for: .idle), [0])
         XCTAssertTrue(store.characters.allSatisfy { $0.manifest.grid == PetGrid(columns: 6, rows: 2) })
         XCTAssertTrue(store.characters.allSatisfy {
             $0.manifest.frames(for: .walkLeft) == [4, 5]
@@ -39,6 +43,7 @@ final class ManifestTests: XCTestCase {
         XCTAssertEqual(spongeBob?.manifest.usesPixelArtFiltering, false)
         XCTAssertEqual(patrick?.manifest.usesPixelArtFiltering, false)
         XCTAssertEqual(squidward?.manifest.usesPixelArtFiltering, false)
+        XCTAssertEqual(mrKrabs?.manifest.usesPixelArtFiltering, false)
 
         guard let squidward,
               let image = NSImage(contentsOf: squidward.spriteSheetURL),
