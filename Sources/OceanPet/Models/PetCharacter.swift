@@ -16,6 +16,13 @@ public struct PetPoint: Codable, Equatable {
     public let y: Double
 }
 
+public struct PetRect: Codable, Equatable {
+    public let x: Double
+    public let y: Double
+    public let width: Double
+    public let height: Double
+}
+
 public struct EyeTrackingConfig: Codable, Equatable {
     public let leftEye: PetPoint
     public let rightEye: PetPoint
@@ -36,6 +43,8 @@ public struct PetManifest: Codable, Equatable, Identifiable {
     public let stateFrames: [String: [Int]]
     public let frameDuration: Double
     public let walkFrameDuration: Double?
+    public let hitPadding: Double?
+    public let hitArea: PetRect?
     public let persona: PetPersona
     public let eyeTracking: EyeTrackingConfig?
 
@@ -60,6 +69,7 @@ public struct PetManifest: Codable, Equatable, Identifiable {
     }
 
     public var usesPixelArtFiltering: Bool { pixelArt ?? true }
+    public var effectiveHitPadding: CGFloat { CGFloat(max(hitPadding ?? 4, 0)) }
 }
 
 public enum PetVisualState: String, Codable, CaseIterable {
