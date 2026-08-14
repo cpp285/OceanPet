@@ -41,6 +41,10 @@ OceanPet 是一款原生 macOS 桌面宠物。它以透明悬浮窗口常驻桌�
 <table align="center">
   <tr>
     <td align="center">
+      <img src="docs/images/masked-fish.png" width="260" alt="OceanPet 蒙面鱼" /><br />
+      <strong>蒙面鱼</strong>
+    </td>
+    <td align="center">
       <img src="docs/images/mr-krabs.png" width="260" alt="OceanPet 卡通蟹老板" /><br />
       <strong>卡通蟹老板</strong>
     </td>
